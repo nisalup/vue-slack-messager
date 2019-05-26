@@ -2,7 +2,7 @@
     <div>    
         <h2>My Account</h2>    
         <div id="myaccount" class="container">
-            <form>
+            <form class="card card-primary">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
@@ -32,7 +32,7 @@
                 <div class="row">
                     <div class="col-3"></div>
                     <div class="col-3">
-                        <div class="form-group">
+                        <div >
                           <button @click="isEditing = !isEditing" v-if="!isEditing" class="btn btn-success">
                             Edit
                           </button>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="col-3">
                         <button v-if="isEditing" @click="isEditing = false" class="btn btn-info">Cancel</button>
-                        <span v-if="!isEditing" >Click to Edit</span>
+                        <!-- <span v-if="!isEditing" >Click to Edit</span> -->
                     </div>
                     <div class="col-3"></div>
                 </div>
@@ -98,5 +98,13 @@
         border-color: transparent;
         background-color: initial;
         color: initial
+    }
+    .card {
+        padding:5px;
+    }
+    .form-group {
+        background-color: aliceblue;
+        border: 2px;
+        border-radius: 5px;
     }
 </style>

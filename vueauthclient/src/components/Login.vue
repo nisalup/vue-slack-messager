@@ -16,9 +16,7 @@
                 </div> <!-- form-group// -->  
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block"> Login  </button>
-                </div> <!-- form-group// -->   
-                <b>Or</b><br>          
-                <a href="https://slack.com/oauth/authorize?scope=identity.basic,identity.email,identity.team,identity.avatar&client_id=648015137095.639839856641"><img alt=""Sign in with Slack"" height="40" width="172" src="https://platform.slack-edge.com/img/sign_in_with_slack.png" srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x" /></a>                                            
+                </div>                                             
             </form>
             </article>
         </div> <!-- card.// -->   

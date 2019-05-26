@@ -2,6 +2,8 @@ import Vue from "vue"
 import Router from "vue-router"
 import Login from "@/components/Login"
 import Dashboard from "@/components/Dashboard"
+import Slack from "@/components/Slack"
+
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -14,6 +16,11 @@ export default new Router({
       path: "/dashboard",
       name: "Dashboard",
       component: Dashboard
+    },
+    {
+      path: "/slack",
+      name: "Slack",
+      component: Slack,
     }
   ]
 })

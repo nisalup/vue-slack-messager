@@ -10,7 +10,7 @@ const app = express()
 const cookieSession = require('cookie-session')  
 const bodyParser = require('body-parser')  
 const passport = require('passport')
-const { WebClient } = require('@slack/web-api');
+const { WebClient } = require('@slack/web-api')
 
 // getting the local authentication type
 const LocalStrategy = require('passport-local').Strategy
@@ -125,15 +125,14 @@ app.get("/api/user", authMiddleware, (req, res) => {
         return user.id === req.session.passport.user
     })
 
-   0// console.log([user, req.session])
+   // console.log([user, req.session])
 
     res.send({ user: user })
 })
 
-app.get("/api/slack/login", (req, res) => {
+app.get("/api/slacklogin", (req, res) => {
     // slack api connection
     // console.log(req.query)
-    console.log(process.env)
     var options = {
         uri: 'https://slack.com/api/oauth.access?code='
             +req.query.code+
@@ -141,27 +140,16 @@ app.get("/api/slack/login", (req, res) => {
             '&client_secret='+ process.env.CLIENT_SECRET,
         method: 'GET'
     }
-
     request(options, (error, response, body) => {
         var JSONresponse = JSON.parse(body)
         if (!JSONresponse.ok){
             console.log(JSONresponse)
-            res.send("Error encountered: \n"+JSON.stringify(JSONresponse)).status(200).end()
+            res.send({'user': {}})
         }else{
-            console.log(JSONresponse)
-            res.send("Success!")
+            console.log(JSONresponse.access_token)
+            res.send({ 'user': JSONresponse.user })
         }
     })
-    console.log(options)
-    request.get('https://slack.com/api/oauth.access', options ,(err,res,body) => {
-        if (res) {
-            console.log(body)
-        }
-        if (err) {
-            console.log(res)
-      }
-      //TODO Do something with response
-    });
 
 })
 

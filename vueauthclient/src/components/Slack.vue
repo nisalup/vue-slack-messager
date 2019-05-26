@@ -1,51 +1,18 @@
 <template>  
     <div>    
-        <h2>My Account</h2>    
         <div id="myaccount" class="container">
             <form>
                 <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            First Name:
-                            <input type="text" ref="first_name" :value="user.firstName" :disabled="!isEditing"
-                                   :class="{view: !isEditing}" class="form-control">
-                          </div>
-                          <div class="form-group">
-                            Last Name:
-                            <input type="text" ref="last_name" :value="user.lastName" :disabled="!isEditing"
-                                   :class="{view: !isEditing}" class="form-control">  
-                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            Telephone:
-                            <input type="text" ref="first_name" :value="user.telephone" :disabled="!isEditing"
-                                   :class="{view: !isEditing}" class="form-control">
-                          </div>
-                          <div class="form-group">
-                            Email:
-                            <input type="text" ref="last_name" :value="user.email" :disabled="!isEditing"
-                                   :class="{view: !isEditing}" class="form-control">  
-                         </div>
+                    <div class="col-12"><h4>Connected to Slack as</h4></div>
+                    <div class="col-12">
+                        <a href="https://slack.com/oauth/authorize?scope=identity.basic,identity.email,identity.team,identity.avatar&client_id=648015137095.639839856641"><img alt="'Sign in with Slack'" height="40" width="172" src="https://platform.slack-edge.com/img/sign_in_with_slack.png" srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x" /></a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-3"></div>
-                    <div class="col-3">
-                        <div class="form-group">
-                          <button @click="isEditing = !isEditing" v-if="!isEditing" class="btn btn-success">
-                            Edit
-                          </button>
-                          <button @click="save" v-else-if="isEditing" class="btn btn-warning">
-                            Save
-                          </button>
-                      </div>
-                    </div>
-                    <div class="col-3">
-                        <button v-if="isEditing" @click="isEditing = false" class="btn btn-info">Cancel</button>
-                        <span v-if="!isEditing" >Click to Edit</span>
-                    </div>
-                    <div class="col-3"></div>
+                    
+                </div>
+                <div class="row">
+                   
                 </div>
             </form>  
         </div> 
@@ -67,10 +34,15 @@
                     password: ""
                 },
                 isEditing: false,
+                isSlackedIn:false,
+                accessToken: '',
+                slackChannelList: [],
+                slackUserData: {}
                 }    
         },   
         mounted() {    
-            this.getUserData()    
+            this.getUserData()
+            this.getSlackUserData()    
         },
         methods: {    
             getUserData: function() {    
@@ -82,14 +54,36 @@
                     })    
                     .catch((errors) => {    
                         console.log(errors)    
-                        router.push("/")    
+                        // router.push("/")    
                     })    
             },
             save() {
               this.user.firstName = this.$refs['first_name'].value;
               this.user.lastName = this.$refs['last_name'].value;
               this.isEditing = !this.isEditing;
-            }    
+            },
+            getSlackUserData: function () {
+                let self = this
+                let code = false
+                try {
+                    code = window.location.href.split('/').slice(-2)[0].split('?')[1].split('&')[0].split('=')[1]
+                    console.log(code)
+                }
+                catch (error) {
+                    console.log('Empty url')
+                }
+                console.log(code)
+                axios.get('/api/slacklogin?code=' + code)
+                    .then((response) => {
+                    console.log('nisss')    
+                        console.log(response.user)    
+                        self.$set(this, "slackUserData", response.data.user)    
+                    })    
+                    .catch((errors) => {    
+                        console.log(errors)    
+                        // router.push("/")    
+                    })    
+            }  
         }   
     }
 </script>
