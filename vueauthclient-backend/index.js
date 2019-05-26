@@ -1,5 +1,6 @@
 const express = require('express')
-var request=require('request');
+var request=require('request')
+require('dotenv').config() 
 
 // public root of built front end
 // publicRoot = 'C:\\Users\\nisal\\OneDrive\\Documents\\Github\\vue-slack-messager\\vueauthclient\\dist'
@@ -132,15 +133,26 @@ app.get("/api/user", authMiddleware, (req, res) => {
 app.get("/api/slack/login", (req, res) => {
     // slack api connection
     // console.log(req.query)
+    console.log(process.env)
+    var options = {
+        uri: 'https://slack.com/api/oauth.access?code='
+            +req.query.code+
+            '&client_id='+ process.env.CLIENT_ID+
+            '&client_secret='+ process.env.CLIENT_SECRET,
+        method: 'GET'
+    }
 
-    const SLACK_TOKEN = 'xoxp-648015137095-646187439568-634750256291-7f326a56e677774fe6cb8ead3de5ed30'
-
-    const options = {
-      client_id: '648015137095.639839856641',
-      client_secret: '7af2109835e6d1a4f691931087791fc1',
-      code: req.query.code,
-    };
-    //console.log(options)
+    request(options, (error, response, body) => {
+        var JSONresponse = JSON.parse(body)
+        if (!JSONresponse.ok){
+            console.log(JSONresponse)
+            res.send("Error encountered: \n"+JSON.stringify(JSONresponse)).status(200).end()
+        }else{
+            console.log(JSONresponse)
+            res.send("Success!")
+        }
+    })
+    console.log(options)
     request.get('https://slack.com/api/oauth.access', options ,(err,res,body) => {
         if (res) {
             console.log(body)
@@ -151,24 +163,6 @@ app.get("/api/slack/login", (req, res) => {
       //TODO Do something with response
     });
 
-    const web = new WebClient(SLACK_TOKEN);
-
-    const currentTime = new Date().toTimeString();
-
-    (async () => {
-      // Use the `auth.test` method to find information about the installing user
-      const res = await web.auth.test()
-
-      // Find your user id to know where to send messages to
-      const userId = res.user_id
-
-      // Use the `chat.postMessage` method to send a message from this app
-      await web.chat.postMessage({
-        channel: userId,
-        text: `The current time is ${currentTime}`,
-      });
-      console.log('Message posted!');
-    })();
 })
 
 app.listen(3000, () => {
