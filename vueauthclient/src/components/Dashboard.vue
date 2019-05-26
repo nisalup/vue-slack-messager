@@ -107,4 +107,7 @@
         border: 2px;
         border-radius: 5px;
     }
+    #myaccount {
+        width:50%;
+    }
 </style>

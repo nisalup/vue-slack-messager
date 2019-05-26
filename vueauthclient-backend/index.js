@@ -146,8 +146,33 @@ app.get("/api/slacklogin", (req, res) => {
             console.log(JSONresponse)
             res.send({'user': {}})
         }else{
-            console.log(JSONresponse.access_token)
-            res.send({ 'user': JSONresponse.user })
+            req.session.passport.access_token = JSONresponse.access_token
+            res.send({ 'user': JSONresponse.user, 'accessToken':  JSONresponse.access_token})
+        }
+    })
+
+})
+
+
+app.get("/api/channelList", (req, res) => {
+    // slack api connection
+    var options = {
+        uri: 'https://slack.com/api/conversations.list?token='
+            +req.session.passport.access_token,
+        method: 'GET',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        }
+    }
+    request(options, (error, response, body) => {
+        var JSONresponse = JSON.parse(body)
+        if (!JSONresponse.ok){
+            console.log(JSONresponse)
+            res.send({'channelList': []})
+        }else{
+            console.log('ddgd')
+            console.log(JSONresponse)
+            res.send({ 'channels': JSONresponse.channels})
         }
     })
 
