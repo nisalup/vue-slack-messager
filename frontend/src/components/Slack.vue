@@ -179,4 +179,10 @@
     #history {
         margin-top:25px;
     }
+    #myaccount {
+        width:50%;
+    }
+    form {
+        padding-top: 5px;
+    }
 </style>
