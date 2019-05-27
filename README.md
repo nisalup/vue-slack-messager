@@ -39,6 +39,9 @@ or
 ```bash
 npm run dev
 ```
+## Login
+username: user@email.com    test@vizir.co
+password: password          testVizir2019
 
 ## Known issues
 1) VueJS routing: It's messed up and I didn't have time to fix it. After logging in via slack, you have to click the slack menu link to view the details, otherwise it will redirect to the login. 
@@ -47,10 +50,15 @@ npm run dev
 Of course, ideally, the access codes should be saved in the backend, and the slack redirect should head to the backend as well.
 
 ##Screenshots
+
 (assets/1.PNG)
+
 (assets/2.PNG)
+
 (assets/3.PNG)
+
 (assets/4.PNG)
+
 (assets/5.PNG)
 
 ## Me
