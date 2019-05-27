@@ -1,11 +1,6 @@
 const express = require('express')
 var request=require('request')
 require('dotenv').config() 
-
-// public root of built front end
-// publicRoot = 'C:\\Users\\nisal\\OneDrive\\Documents\\Github\\vue-slack-messager\\vueauthclient\\dist'
-
-// creating an express instance
 const app = express()  
 const cookieSession = require('cookie-session')  
 const bodyParser = require('body-parser')  
@@ -14,6 +9,9 @@ const { WebClient } = require('@slack/web-api')
 
 // getting the local authentication type
 const LocalStrategy = require('passport-local').Strategy
+
+// public root of built front end
+publicRoot = 'C:\\Users\\nisal\\OneDrive\\Documents\\Github\\vue-slack-messager\\vueauthclient\\dist'
 
 const authMiddleware = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -75,10 +73,10 @@ passport.deserializeUser((id, done) => {
     done(null, user)
 })
 
-// app.use(express.static(publicRoot)) 
-// app.get("/", (req, res, next) => {
-//    res.sendFile("index.html", { root: publicRoot })
-//})
+//app.use(express.static(publicRoot)) 
+/*app.get("/", (req, res, next) => {
+   res.sendFile("index.html", { root: publicRoot })
+})*/
 
 
 app.use(bodyParser.json())
@@ -146,13 +144,64 @@ app.get("/api/slacklogin", (req, res) => {
             console.log(JSONresponse)
             res.send({'user': {}})
         }else{
-            console.log(JSONresponse.access_token)
-            res.send({ 'user': JSONresponse.user })
+            req.session.passport.access_token = JSONresponse.access_token
+            res.send({ 'user': JSONresponse.user, 'accessToken':  JSONresponse.access_token})
+        }
+    })
+
+})
+
+
+app.get("/api/channelList", (req, res) => {
+    // slack api connection
+    var options = {
+        uri: 'https://slack.com/api/conversations.list?token='
+            +req.session.passport.access_token,
+        method: 'GET',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        }
+    }
+    request(options, (error, response, body) => {
+        var JSONresponse = JSON.parse(body)
+        if (!JSONresponse.ok){
+            res.send({'channelList': []})
+        }else{
+            res.send({ 'channels': JSONresponse.channels})
+        }
+    })
+
+})
+
+app.post("/api/postSlackMessage", (req, res) => {
+    // slack api connection
+    var options = {
+        uri: 'https://slack.com/api/chat.postMessage',
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization':'Bearer ' + req.session.passport.access_token,
+        },
+        json: {
+            'channel': req.body.channel,
+            'text': req.body.text
+        }
+    }
+    request(options, (error, response, body) => {
+        console.log(body)
+        var JSONresponse = body
+        if (!JSONresponse.ok){
+            console.log(JSONresponse)
+            res.send({'response': []})
+        }else{
+            console.log('ddgd')
+            console.log(JSONresponse)
+            res.send({ 'response': JSONresponse})
         }
     })
 
 })
 
 app.listen(3000, () => {
-    console.log("Example app listening on port 3000")
+    console.log("vue-slack-messager listening on port 3000")
 })

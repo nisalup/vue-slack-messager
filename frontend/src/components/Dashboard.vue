@@ -33,10 +33,10 @@
                     <div class="col-3"></div>
                     <div class="col-3">
                         <div >
-                          <button @click="isEditing = !isEditing" v-if="!isEditing" class="btn btn-success">
+                          <button v-on:click="isEditing = !isEditing" v-if="!isEditing" class="btn btn-success">
                             Edit
                           </button>
-                          <button @click="save" v-else-if="isEditing" class="btn btn-warning">
+                          <button v-on:click="save" v-else-if="isEditing" class="btn btn-warning">
                             Save
                           </button>
                       </div>
@@ -106,5 +106,8 @@
         background-color: aliceblue;
         border: 2px;
         border-radius: 5px;
+    }
+    #myaccount {
+        width:50%;
     }
 </style>
