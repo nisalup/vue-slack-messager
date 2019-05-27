@@ -11,7 +11,7 @@ const { WebClient } = require('@slack/web-api')
 const LocalStrategy = require('passport-local').Strategy
 
 // public root of built front end
-// publicRoot = 'C:\\Users\\nisal\\OneDrive\\Documents\\Github\\vue-slack-messager\\vueauthclient\\dist'
+publicRoot = 'C:\\Users\\nisal\\OneDrive\\Documents\\Github\\vue-slack-messager\\vueauthclient\\dist'
 
 const authMiddleware = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -73,10 +73,10 @@ passport.deserializeUser((id, done) => {
     done(null, user)
 })
 
-// app.use(express.static(publicRoot)) 
-// app.get("/", (req, res, next) => {
-//    res.sendFile("index.html", { root: publicRoot })
-//})
+//app.use(express.static(publicRoot)) 
+/*app.get("/", (req, res, next) => {
+   res.sendFile("index.html", { root: publicRoot })
+})*/
 
 
 app.use(bodyParser.json())
@@ -203,5 +203,5 @@ app.post("/api/postSlackMessage", (req, res) => {
 })
 
 app.listen(3000, () => {
-    console.log("Example app listening on port 3000")
+    console.log("vue-slack-messager listening on port 3000")
 })
