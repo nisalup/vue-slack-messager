@@ -49,7 +49,7 @@ password: password          testVizir2019
 2) As there is no DB used, I cannot persist data in the backend, except for session data. As a consequence, I ridrect from slack to the front end, and send that code to the backend, which will obtain the access code and other data.
 Of course, ideally, the access codes should be saved in the backend, and the slack redirect should head to the backend as well.
 
-##Screenshots
+## Screenshots
 
 (assets/1.PNG)
 
