@@ -29,8 +29,26 @@
                     </div>
                     <div class="col-6" v-if="accessToken">
                         Please select a channel: <br>
-                        <b-form-select v-model="selectedChannel" :options="slackChannelList"></b-form-select>
+                        <b-form-select v-model="selectedChannel" :options="slackChannelList"></b-form-select><br>
+                        <div id="textForm">
+                            <b-form-textarea
+                              id="textarea"
+                              v-model="messageText"
+                              placeholder="Enter something..."
+                              rows="3"
+                              max-rows="6"
+                            ></b-form-textarea>
 
+                        </div>
+                        <button id="postSlackMessage" class="btn btn-success" v-on:click="postMessage" >Post to Slack</button>
+                        <br />
+                          <b-card no-body header="Slack Message History" id="history">
+                            <b-list-group flush>
+                              <b-list-group-item href="#" v-for="sentMessage in sentMessages">
+                                  <b>on {{ sentMessage.channel }}:</b>&nbsp;<span>{{ sentMessage.text }}</span>
+                              </b-list-group-item>
+                            </b-list-group>
+                          </b-card>
                     </div>
                 </div>
                 <div class="row">
@@ -52,7 +70,9 @@
                 slackUserData: {},
                 accessToken: false,
                 slackChannelList: [],
-                selectedChannel: null
+                selectedChannel: null,
+                messageText: '',
+                sentMessages: []
                 }    
         },   
         mounted() {    
@@ -98,8 +118,8 @@
                             }]
                             for (const channel of response.data.channels) {
                                 let item = {
-                                    value: channel.name,
-                                    text: '# ' + channel.name
+                                    value: channel.id,
+                                    text: '#' + channel.name
                                 }
                                 channels.push(item)
                             }
@@ -110,6 +130,33 @@
                         console.log(errors)    
                         // Srouter.push("/")    
                     })
+            },
+            postMessage: function (e) {
+                e.preventDefault()
+                if (!this.selectedChannel || !this.messageText) {
+                    return
+                }
+                self = this
+                axios.post('/api/postSlackMessage', {
+                    channel: this.selectedChannel,
+                    text: this.messageText
+                })
+                .then((response) => { 
+                    if (response.data && response.data.response) {
+                        let messageHistory = self.sentMessages
+                        let channelName = self.slackChannelList.find((channel) => {
+                            return channel.value === self.selectedChannel
+                        }).text
+                        messageHistory.push({channel: channelName, text: self.messageText})
+                        self.$set(this, "messageText", "") 
+                        self.$set(this, "sentMessages", messageHistory) 
+                    }  
+                })    
+                .catch((errors) => {    
+                    console.log(errors) 
+
+                    // Srouter.push("/")    
+                })
             }  
         }   
     }
@@ -122,5 +169,14 @@
     }
     .failure {
         color: red;
+    }
+    #textForm {
+        margin-top:25px;
+    }
+    #postSlackMessage {
+        margin-top:25px;
+    }
+    #history {
+        margin-top:25px;
     }
 </style>

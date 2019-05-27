@@ -1,11 +1,6 @@
 const express = require('express')
 var request=require('request')
 require('dotenv').config() 
-
-// public root of built front end
-// publicRoot = 'C:\\Users\\nisal\\OneDrive\\Documents\\Github\\vue-slack-messager\\vueauthclient\\dist'
-
-// creating an express instance
 const app = express()  
 const cookieSession = require('cookie-session')  
 const bodyParser = require('body-parser')  
@@ -14,6 +9,9 @@ const { WebClient } = require('@slack/web-api')
 
 // getting the local authentication type
 const LocalStrategy = require('passport-local').Strategy
+
+// public root of built front end
+// publicRoot = 'C:\\Users\\nisal\\OneDrive\\Documents\\Github\\vue-slack-messager\\vueauthclient\\dist'
 
 const authMiddleware = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -167,12 +165,38 @@ app.get("/api/channelList", (req, res) => {
     request(options, (error, response, body) => {
         var JSONresponse = JSON.parse(body)
         if (!JSONresponse.ok){
-            console.log(JSONresponse)
             res.send({'channelList': []})
+        }else{
+            res.send({ 'channels': JSONresponse.channels})
+        }
+    })
+
+})
+
+app.post("/api/postSlackMessage", (req, res) => {
+    // slack api connection
+    var options = {
+        uri: 'https://slack.com/api/chat.postMessage',
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization':'Bearer ' + req.session.passport.access_token,
+        },
+        json: {
+            'channel': req.body.channel,
+            'text': req.body.text
+        }
+    }
+    request(options, (error, response, body) => {
+        console.log(body)
+        var JSONresponse = body
+        if (!JSONresponse.ok){
+            console.log(JSONresponse)
+            res.send({'response': []})
         }else{
             console.log('ddgd')
             console.log(JSONresponse)
-            res.send({ 'channels': JSONresponse.channels})
+            res.send({ 'response': JSONresponse})
         }
     })
 
