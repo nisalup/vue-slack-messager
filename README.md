@@ -51,15 +51,15 @@ Of course, ideally, the access codes should be saved in the backend, and the sla
 
 ## Screenshots
 
-(assets/1.PNG)
+![Screens](assets/1.PNG)
 
-(assets/2.PNG)
+![Screens](assets/2.PNG)
 
-(assets/3.PNG)
+![Screens](assets/3.PNG)
 
-(assets/4.PNG)
+![Screens](assets/4.PNG)
 
-(assets/5.PNG)
+![Screens](assets/5.PNG)
 
 ## Me
 Nisal [Linkedin](https://linkedin.com/in/nisalup/), nisalup@gmail.com
