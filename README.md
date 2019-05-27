@@ -11,9 +11,11 @@ This application permits users to do the following.
 ## Setting it up
 A .env file is needed in the /backend root folder in the following format.
 
+```bash
 SLACK_TOKEN=xxx
 CLIENT_ID=xxx
 CLIENT_SECRET=xxxx
+```
 
 These can be obtained at https://api.slack.com/apps by creating your own app.
 
